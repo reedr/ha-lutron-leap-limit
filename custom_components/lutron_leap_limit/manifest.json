@@ -1,0 +1,14 @@
+{
+  "domain": "lutron_leap_limit",
+  "name": "Lutron LEAP Limit",
+  "codeowners": ["@reedr"],
+  "config_flow": true,
+  "dependencies": ["lutron_caseta"],
+  "documentation": "https://github.com/reedr/ha-lutron-leap-limit",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/reedr/ha-lutron-leap-limit/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "1.0.0"
+}

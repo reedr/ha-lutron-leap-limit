@@ -1,0 +1,22 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Raise pylutron-caseta's LEAP read limit from 256 KiB to 4 MiB, so large Lutron systems whose replies exceed 256 KiB can connect. Lutron Caseta picks it up on its next reconnect."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Already set up."
+    }
+  },
+  "issues": {
+    "incompatible": {
+      "title": "Lutron LEAP Limit can't apply its change",
+      "description": "pylutron-caseta's connection function no longer takes a read limit, so this integration does nothing. Check whether large Lutron systems still need it; if not, remove it."
+    },
+    "not_needed": {
+      "title": "Lutron LEAP Limit is no longer needed",
+      "description": "pylutron-caseta now reads up to {limit} bytes per reply on its own, which is at least what this integration sets. You can remove it."
+    }
+  }
+}

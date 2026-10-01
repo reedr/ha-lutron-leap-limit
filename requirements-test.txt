@@ -1,0 +1,2 @@
+pytest-homeassistant-custom-component==0.13.366
+pylutron-caseta==0.29.0
