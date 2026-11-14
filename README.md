@@ -17,6 +17,11 @@ This integration raises the default read limit of `pylutron_caseta.leap.open_con
 bridge calls that function on every reconnect, so a connection stuck in that loop recovers on its next attempt; nothing
 else is changed. Unloading the integration puts the library's own limit back.
 
+Since 1.1.0 it also raises the library's per-request timeout from 5 s to 15 s. A big processor sent a burst of zone
+commands (turning off every light in a large room, say) can answer some of them after more than 5 s: the lights change,
+but the calls fail with `TimeoutError` and the late replies are logged as "Was not expecting message with tag ...".
+Unloading puts the 5 s timeout back.
+
 ## Setup
 
 Install through HACS, restart, then **Settings → Devices & services → Add integration → Lutron LEAP Limit**.

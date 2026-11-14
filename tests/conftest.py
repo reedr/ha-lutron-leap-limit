@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 from homeassistant.core import HomeAssistant
-from pylutron_caseta import leap
+from pylutron_caseta import leap, smartbridge
 
 pytest_plugins = ("pytest_homeassistant_custom_component",)
 
@@ -24,6 +24,8 @@ def no_lutron_setup(hass: HomeAssistant):
 def restore_limit():
     """Never leak a changed default between tests."""
     original = dict(leap.open_connection.__kwdefaults__)
+    timeout = smartbridge.REQUEST_TIMEOUT
     yield
     leap.open_connection.__kwdefaults__.clear()
     leap.open_connection.__kwdefaults__.update(original)
+    smartbridge.REQUEST_TIMEOUT = timeout

@@ -10,10 +10,10 @@ from homeassistant.config_entries import SOURCE_USER
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.helpers import issue_registry as ir
-from pylutron_caseta import leap
+from pylutron_caseta import leap, smartbridge
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.lutron_leap_limit.const import DOMAIN, LIMIT
+from custom_components.lutron_leap_limit.const import DOMAIN, LIMIT, REQUEST_TIMEOUT
 
 LIBRARY_LIMIT = 2**18
 
@@ -95,3 +95,22 @@ async def test_config_flow(hass: HomeAssistant) -> None:
     await hass.async_block_till_done()
     result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": SOURCE_USER})
     assert result["type"] is FlowResultType.ABORT
+
+
+async def test_request_timeout(hass: HomeAssistant) -> None:
+    """The 5 s request timeout is raised while loaded, kept across a reload, restored on unload."""
+    assert smartbridge.REQUEST_TIMEOUT == 5.0
+    entry = await _setup(hass)
+    assert smartbridge.REQUEST_TIMEOUT == REQUEST_TIMEOUT
+    assert await hass.config_entries.async_reload(entry.entry_id)
+    await hass.async_block_till_done()
+    assert smartbridge.REQUEST_TIMEOUT == REQUEST_TIMEOUT
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    assert smartbridge.REQUEST_TIMEOUT == 5.0
+
+
+async def test_request_timeout_with_limit_not_needed(hass: HomeAssistant) -> None:
+    """The timeout is raised even when the read limit needs no change."""
+    leap.open_connection.__kwdefaults__["limit"] = 8 * 1024 * 1024
+    await _setup(hass)
+    assert smartbridge.REQUEST_TIMEOUT == REQUEST_TIMEOUT
